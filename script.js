@@ -1,68 +1,65 @@
 const form = document.querySelector("form");
-const fontSizeInput = document.getElementById("fontsize");
-const fontColorInput = document.getElementById("fontcolor");
+const fontsizeInput = document.getElementById("fontsize");
+const fontcolorInput = document.getElementById("fontcolor");
 
-// Get cookie value
+// Get cookie
 function getCookie(name) {
-  const cookies = document.cookie.split(";");
+  const cookies = document.cookie.split("; ");
 
   for (let cookie of cookies) {
-    const [key, value] = cookie.trim().split("=");
+    const parts = cookie.split("=");
 
-    if (key === name) {
-      return decodeURIComponent(value);
+    if (parts[0] === name) {
+      return decodeURIComponent(parts[1]);
     }
   }
 
   return null;
 }
 
-// Apply saved preferences on page load
-const savedFontSize = getCookie("fontsize");
-const savedFontColor = getCookie("fontcolor");
+// Apply preferences on page load
+const savedFontsize = getCookie("fontsize");
+const savedFontcolor = getCookie("fontcolor");
 
-if (savedFontSize) {
+if (savedFontsize) {
   document.documentElement.style.setProperty(
     "--fontsize",
-    savedFontSize + "px"
+    savedFontsize + "px"
   );
 
-  fontSizeInput.value = savedFontSize;
+  // Important for test
+  fontsizeInput.value = savedFontsize;
 }
 
-if (savedFontColor) {
+if (savedFontcolor) {
   document.documentElement.style.setProperty(
     "--fontcolor",
-    savedFontColor
+    savedFontcolor
   );
 
-  fontColorInput.value = savedFontColor;
+  // Important for test
+  fontcolorInput.value = savedFontcolor;
 }
 
 // Save preferences
 form.addEventListener("submit", function (event) {
   event.preventDefault();
 
-  const fontSize = fontSizeInput.value;
-  const fontColor = fontColorInput.value;
+  const fontsize = fontsizeInput.value;
+  const fontcolor = fontcolorInput.value;
 
   // Save cookies
-  document.cookie =
-    "fontsize=" + encodeURIComponent(fontSize) +
-    "; path=/; max-age=31536000";
+  document.cookie = `fontsize=${fontsize}; path=/`;
+  document.cookie = `fontcolor=${fontcolor}; path=/`;
 
-  document.cookie =
-    "fontcolor=" + encodeURIComponent(fontColor) +
-    "; path=/; max-age=31536000";
-
-  // Apply immediately
+  // Apply styles immediately
   document.documentElement.style.setProperty(
     "--fontsize",
-    fontSize + "px"
+    fontsize + "px"
   );
 
   document.documentElement.style.setProperty(
     "--fontcolor",
-    fontColor
+    fontcolor
   );
 });
